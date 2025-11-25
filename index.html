@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RDK 47 Command Center</title>
+    <link rel="icon" type="image/png" href="img/logo-rdk-color.png">
+    <style>
+        /* --- 1. GSM & VARIABLES --- */
+        :root {
+            /* Palet Warna RDK 47 */
+            --primary-red: #AA1F24;
+            --primary-green: #0F735F;
+            --secondary-yellow: #F7B625;
+            --secondary-brown: #682D20;
+            --bg-cream: #FFFBF2; 
+            --white: #FFFFFF;
+            
+            /* Fonts Fallback */
+            --font-heading: 'Marquisette', sans-serif;
+            --font-subheading: 'Santral', sans-serif;
+            --font-body: 'Zabal', sans-serif;
+        }
+
+        /* --- UPDATED FONT FILES --- */
+        @font-face { font-family: 'Marquisette'; src: url('fonts/Marquisette.ttf'); }
+        @font-face { font-family: 'Santral'; src: url('fonts/Santral-ExtraBold.ttf'); }
+        @font-face { font-family: 'Zabal'; src: url('fonts/ZabalDEMO-Regular.otf'); }
+
+        /* --- 2. GLOBAL STYLES --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-cream);
+            font-family: var(--font-body);
+            color: var(--secondary-brown);
+            background-image: url('img/bg-asset-1.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: top right;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; }
+
+        /* --- 3. HEADER (REVISI: SIDE BY SIDE) --- */
+        header {
+            background-color: var(--primary-red);
+            color: var(--white);
+            padding: 1.2rem 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 5px solid var(--secondary-yellow);
+            
+            /* Flexbox untuk bikin Logo & Teks Sebelahan */
+            display: flex;
+            align-items: center; /* Rata tengah vertikal */
+            justify-content: center; /* Rata tengah horizontal */
+            gap: 20px; /* Jarak antara logo dan teks */
+            text-align: left; /* Teks rata kiri */
+        }
+
+        .logo-container img {
+            height: 70px; /* Ukuran logo */
+            display: block; /* Hilangkan gap bawah image */
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        header h1 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            margin: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        header p {
+            font-family: var(--font-subheading);
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- 4. MAIN CONTAINER --- */
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            padding-bottom: 80px; 
+        }
+
+        /* --- CARD STYLING --- */
+        .card-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(104, 45, 32, 0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-family: var(--font-subheading);
+            color: var(--primary-green);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--secondary-yellow);
+            display: inline-block;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* --- SECTION 1: TIMELINE --- */
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-timeline {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: var(--font-subheading);
+        }
+
+        .btn-timeline:hover {
+            background-color: #0b5a4a;
+            transform: translateY(-2px);
+        }
+
+        /* --- SECTION 2: DATABASE UNIT --- */
+        .secure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .btn-secure {
+            background-color: var(--secondary-yellow);
+            color: var(--secondary-brown);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            font-family: var(--font-subheading);
+        }
+
+        .btn-secure:hover {
+            background-color: #e0a31d; /* Kuning sedikit lebih gelap */
+            transform: translateY(-2px); /* Efek tombol 'naik' sedikit */
+            border-color: transparent; /* Hapus border yang mengganggu */
+            box-shadow: 0 5px 15px rgba(247, 182, 37, 0.4); /* Tambah efek bayangan (glow) kuning biar makin asik */
+        }
+
+        .btn-secure::after {
+            content: "🔒";
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        /* --- SECTION 3 & 4: SOP & KEBUTUHAN --- */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .link-list { list-style: none; padding: 0; margin: 0; }
+        .link-list li { margin-bottom: 10px; }
+
+        .btn-list {
+            display: block;
+            padding: 12px 15px;
+            background-color: #f4f4f4;
+            color: var(--secondary-brown);
+            border-radius: 8px;
+            border-left: 5px solid var(--primary-red);
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-list:hover {
+            background-color: #e9e9e9;
+            padding-left: 20px; 
+        }
+
+        .sop-list .btn-list { border-left-color: var(--primary-red); }
+        .tools-list .btn-list { border-left-color: var(--primary-green); }
+
+        /* --- SECTION 5: ARSIP --- */
+        .arsip-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-arsip {
+            background-color: var(--secondary-brown);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            transition: 0.3s;
+            font-family: var(--font-subheading);
+        }
+
+        .btn-arsip:hover { background-color: #4a1f16; }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: var(--bg-cream);
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 4px solid var(--secondary-yellow);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary-brown);
+        }
+
+        .modal-box h3 { color: var(--primary-red); margin-top: 0; font-family: var(--font-heading); font-size: 1.5rem; }
+        
+        .modal-box input {
+            width: 80%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 2px solid var(--secondary-brown);
+            border-radius: 5px;
+            font-family: var(--font-body);
+            text-align: center;
+        }
+
+        .modal-box button {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: var(--font-subheading);
+        }
+
+        .error-msg {
+            color: var(--primary-red);
+            font-size: 0.8rem;
+            margin-top: 10px;
+            display: none;
+            font-weight: bold;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--secondary-brown);
+            opacity: 0.7;
+        }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column; /* Balik jadi atas-bawah kalau di HP biar ga sempit */
+                text-align: center;
+            }
+            .header-text { align-items: center; }
+            
+            .split-layout { grid-template-columns: 1fr; }
+            .timeline-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 1.8rem; margin-top: 10px;}
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="img/logo-rdk.png" alt="Logo RDK 47"> 
+        </div>
+        <div class="header-text">
+            <h1>RDK 47 COMMAND CENTER</h1>
+            <p>Portal Terintegrasi Panitia Ramadan di Kampus ITS 1447 H</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="card-section">
+            <div class="section-title">📅 Timeline & Jadwal</div>
+            <div class="timeline-grid">
+                <a href="https://docs.google.com/spreadsheets/d/1Z0Ol1wvU_nFuUbZdzKQkrSIi1jNHsojq/edit?gid=2146764825#gid=2146764825" class="btn-timeline">Timeline RDK 47</a>
+                <a href="https://www.its.ac.id/pendidikan/2025/02/24/kalender-akademik-2025-2026/" class="btn-timeline">Kalender Akademik ITS</a>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <div class="section-title">🔒 Database Unit (Restricted)</div>
+            <div class="secure-grid">
+                <div class="btn-secure" onclick="openModal('event')">Unit Event</div>
+                <div class="btn-secure" onclick="openModal('ibadah')">Unit Ibadah</div>
+                <div class="btn-secure" onclick="openModal('finansial')">Unit Finansial</div>
+                <div class="btn-secure" onclick="openModal('media')">Unit Media</div>
+                <div class="btn-secure" onclick="openModal('biro')">Kebiroan</div>
+            </div>
+        </div>
+
+        <div class="split-layout">
+            <div class="card-section">
+                <div class="section-title">📝 SOP & Request</div>
+                <ul class="link-list sop-list">
+                    <li><a href="https://docs.google.com/document/d/11SiUHEmxueky3lMOyi6KU74NjXN_olbS7UF5hS0yYU4/edit?tab=t.0#heading=h.1ga65miavhlt" class="btn-list">Request Media</a></li>
+                    <li><a href="https://docs.google.com/document/d/1fGCJpnCwDH90CU2adbNm101nXgaVXqvHpJqQ9H-G-0s/edit?tab=t.0" class="btn-list">Permohonan Dana</a></li>
+                    <li><a href="https://docs.google.com/document/d/1aq2FZ8X1T2pIE5LDMO507__yRdWLf__0TFnDVdd11YA/edit?tab=t.0" class="btn-list">Kebutuhan Administrasi</a></li>
+                    <li><a href="https://docs.google.com/spreadsheets/d/1TRT0vwuKnQb-w72CK-cSHq8QSozXYITqNSBASernqqE/edit?gid=0#gid=0" class="btn-list">Bantuan Operasional</a></li>
+                    <li><a href="https://docs.google.com/spreadsheets/d/1tBFPP8vuv3BAK35TZxkSJFWsrLMQRnsZH-YMUg31KHo/edit?gid=1558544824#gid=1558544824" class="btn-list">Relasi Publik</a></li>
+                    <li><a href="https://docs.google.com/spreadsheets/d/1fAlUpqZ1SqFyKjFXd91o-qIfUJbi0211eJvqN2PFb7k/edit?gid=0#gid=0" class="btn-list">Request Website</a></li>
+                </ul>
+            </div>
+
+            <div class="card-section">
+                <div class="section-title">📂 Kebutuhan Panitia</div>
+                <ul class="link-list tools-list">
+                    <li><a href="https://drive.google.com/file/d/1FE6CMBVThchQpxysTXl7lfDgwzCy7f5z/view" class="btn-list">Proposal Kegiatan RDK 47</a></li>
+                    <li><a href="https://docs.google.com/spreadsheets/d/1w2Z8gU4n8iP-Q8shvkjQHGUnIzVcVq3twsdM_zfRmEY/edit?gid=1569935620#gid=1569935620" class="btn-list">Monthly Scrum Sheet</a></li>
+                    <li><a href="https://docs.google.com/spreadsheets/d/1gzHA7cq6QBc_YrJD9PJuSPRvaxI7vEeK6cyma5te-oc/edit?gid=1259193011#gid=1259193011" class="btn-list">RAB RDK 47</a></li>
+                    <li><a href="https://docs.google.com/spreadsheets/d/10ErG8PpCQ4AMuDc6RJeko5vTSdJmkntQuGk-W8ideV4/edit?gid=0#gid=0" class="btn-list">Database Kontak Panitia</a></li>
+                    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSdlpBkbivInXNQ7jBcUYQh7sLs9eSw49KcW7Km-s-l3fzDqpQ/alreadyresponded" class="btn-list">Formulir Database</a></li>
+                    <li><a href="https://www.canva.com/design/DAGyiOUwTRg/YFVvo6rBqZg_Br3AjNtHKg/edit?utm_content=DAGyiOUwTRg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton&success=true" class="btn-list">PPT Grand Design</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <div class="section-title">📚 Dokumen Arsip</div>
+            <div class="arsip-grid">
+                <a href="https://drive.google.com/file/d/1t31LAY8YOiGOCEX-sbTxXJv1ihH3OkVW/view" class="btn-arsip">LPJ RDK 46 ITS</a>
+                <a href="https://drive.google.com/file/d/110Hu740bknIhrNZK2c4y7fV-vNA4UwTn/view" class="btn-arsip">LPJ RDK 45 ITS</a>
+                <a href="https://drive.google.com/file/d/1fgHOjwCotTaQLrxdeZflhzvV_MekVq83/view" class="btn-arsip">LPJ RDK 44 ITS</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2025 RDK 47 ITS - Bahtera Kembara. <br>
+        Dibuat dengan ❤️ oleh Project Officer.
+    </footer>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Masukkan Sandi</h3>
+            <p style="font-size: 0.9rem;">Database ini bersifat rahasia.</p>
+            <input type="password" id="passInput" placeholder="Ketik password unit...">
+            <br>
+            <button onclick="checkPassword()">BUKA</button>
+            <p id="errorMsg" class="error-msg">Sandi salah! Coba lagi.</p>
+        </div>
+    </div>
+
+    <script>
+        // KONFIGURASI PASSWORD & LINK
+        const dbConfig = {
+            'event': { pass: 'event2526', url: 'https://drive.google.com/drive/folders/1ICb0a4wr2P1la4l4EMOCe3NgmsB2rKKN?usp=sharing' },
+            'ibadah': { pass: 'ibadah1', url: 'https://drive.google.com/drive/folders/1fXeKhAFlT2nyHjjWUu1eSpOjBKYKwQDo?usp=sharing' },
+            'finansial': { pass: 'cuanrdk47', url: 'https://drive.google.com/drive/folders/1zodueVA7OCt7g-pfg0KtO4OPLG32ytkd?usp=sharing' },
+            'media': { pass: 'MasyaAllahMediaRDK47', url: 'https://drive.google.com/drive/folders/1t6GnW2w7ZbfWKzSjXA0ir4hLCDjtWl15?usp=sharing' },
+            'biro': { pass: 'birobiro', url: 'https://drive.google.com/drive/folders/1Wvv2RhmzkQeJel7JdikxKd6Ab8EO2Cw4?usp=sharing' }
+        };
+
+        let currentUnit = '';
+
+        function openModal(unit) {
+            currentUnit = unit;
+            document.getElementById('modalTitle').innerText = "Akses Unit " + unit.charAt(0).toUpperCase() + unit.slice(1);
+            document.getElementById('modalOverlay').style.display = 'flex';
+            document.getElementById('passInput').value = '';
+            document.getElementById('errorMsg').style.display = 'none';
+            document.getElementById('passInput').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passInput').value;
+            const correctPass = dbConfig[currentUnit].pass;
+            const targetUrl = dbConfig[currentUnit].url;
+
+            if (input === correctPass) {
+                window.location.href = targetUrl;
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+                const modalBox = document.querySelector('.modal-box');
+                modalBox.style.transform = 'translateX(5px)';
+                setTimeout(() => modalBox.style.transform = 'translateX(0)', 100);
+            }
+        }
+
+        document.getElementById("passInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkPassword();
+            }
+        });
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('modalOverlay')) {
+                closeModal();
+            }
+        }
+    </script>
+
+</body>
+</html>
