@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RDK 47 Command Center</title>
     <link rel="icon" type="image/png" href="img/logo-rdk-color.png">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
         /* --- 1. GSM & VARIABLES --- */
         :root {
@@ -328,7 +330,7 @@
 
     <div class="container">
 
-        <div class="card-section">
+        <div class="card-section" data-aos="fade-up">
             <div class="section-title">📅 Timeline & Jadwal</div>
             <div class="timeline-grid">
                 <a href="https://docs.google.com/spreadsheets/d/1Z0Ol1wvU_nFuUbZdzKQkrSIi1jNHsojq/edit?gid=2146764825#gid=2146764825" class="btn-timeline">Timeline RDK 47</a>
@@ -336,7 +338,7 @@
             </div>
         </div>
 
-        <div class="card-section">
+        <div class="card-section" data-aos="fade-up">
             <div class="section-title">🔒 Database Unit (Restricted)</div>
             <div class="secure-grid">
                 <div class="btn-secure" onclick="openModal('event')">Unit Event</div>
@@ -348,7 +350,7 @@
         </div>
 
         <div class="split-layout">
-            <div class="card-section">
+            <div class="card-section" data-aos="zoom-in">
                 <div class="section-title">📝 SOP & Request</div>
                 <ul class="link-list sop-list">
                     <li><a href="https://docs.google.com/document/d/11SiUHEmxueky3lMOyi6KU74NjXN_olbS7UF5hS0yYU4/edit?tab=t.0#heading=h.1ga65miavhlt" class="btn-list">Request Media</a></li>
@@ -360,7 +362,7 @@
                 </ul>
             </div>
 
-            <div class="card-section">
+            <div class="card-section" data-aos="zoom-in">
                 <div class="section-title">📂 Kebutuhan Panitia</div>
                 <ul class="link-list tools-list">
                     <li><a href="https://drive.google.com/file/d/1FE6CMBVThchQpxysTXl7lfDgwzCy7f5z/view" class="btn-list">Proposal Kegiatan RDK 47</a></li>
@@ -374,7 +376,7 @@
         </div>
 
         <div class="card-section">
-            <div class="section-title">📚 Dokumen Arsip</div>
+            <div class="section-title" data-aos="fade-up">📚 Dokumen Arsip</div>
             <div class="arsip-grid">
                 <a href="https://drive.google.com/file/d/1t31LAY8YOiGOCEX-sbTxXJv1ihH3OkVW/view" class="btn-arsip">LPJ RDK 46 ITS</a>
                 <a href="https://drive.google.com/file/d/110Hu740bknIhrNZK2c4y7fV-vNA4UwTn/view" class="btn-arsip">LPJ RDK 45 ITS</a>
@@ -400,59 +402,6 @@
             <p id="errorMsg" class="error-msg">Sandi salah! Coba lagi.</p>
         </div>
     </div>
-
-    <script>
-        // KONFIGURASI PASSWORD & LINK
-        const dbConfig = {
-            'event': { pass: 'Event47', url: 'https://drive.google.com/drive/folders/1ICb0a4wr2P1la4l4EMOCe3NgmsB2rKKN?usp=sharing' },
-            'ibadah': { pass: 'ibadah1', url: 'https://drive.google.com/drive/folders/1fXeKhAFlT2nyHjjWUu1eSpOjBKYKwQDo?usp=sharing' },
-            'finansial': { pass: 'MataDuitan', url: 'https://drive.google.com/drive/folders/1zodueVA7OCt7g-pfg0KtO4OPLG32ytkd?usp=sharing' },
-            'media': { pass: 'MasyaAllahMediaRDK47', url: 'https://drive.google.com/drive/folders/1t6GnW2w7ZbfWKzSjXA0ir4hLCDjtWl15?usp=sharing' },
-            'biro': { pass: 'birobiro', url: 'https://drive.google.com/drive/folders/1Wvv2RhmzkQeJel7JdikxKd6Ab8EO2Cw4?usp=sharing' }
-        };
-
-        let currentUnit = '';
-
-        function openModal(unit) {
-            currentUnit = unit;
-            document.getElementById('modalTitle').innerText = "Akses Unit " + unit.charAt(0).toUpperCase() + unit.slice(1);
-            document.getElementById('modalOverlay').style.display = 'flex';
-            document.getElementById('passInput').value = '';
-            document.getElementById('errorMsg').style.display = 'none';
-            document.getElementById('passInput').focus();
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').style.display = 'none';
-        }
-
-        function checkPassword() {
-            const input = document.getElementById('passInput').value;
-            const correctPass = dbConfig[currentUnit].pass;
-            const targetUrl = dbConfig[currentUnit].url;
-
-            if (input === correctPass) {
-                window.location.href = targetUrl;
-            } else {
-                document.getElementById('errorMsg').style.display = 'block';
-                const modalBox = document.querySelector('.modal-box');
-                modalBox.style.transform = 'translateX(5px)';
-                setTimeout(() => modalBox.style.transform = 'translateX(0)', 100);
-            }
-        }
-
-        document.getElementById("passInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                checkPassword();
-            }
-        });
-
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('modalOverlay')) {
-                closeModal();
-            }
-        }
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/gh/itdevrdk/cdn-js/"></script>
 </body>
 </html>
